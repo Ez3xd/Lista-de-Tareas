@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Aplicación de lista de tareas desarrollada para el laboratorio de POE."
+    />
+    <title>Gestor de Tareas</title>
+  </head>
+  <body>
+    <main id="app" class="app">
+      <header class="app__header">
+        <div class="header-status">
+          <div class="system-badge">
+            <span class="system-dot" aria-hidden="true"></span>
+            <span class="system-label">SISTEMA ACTIVO</span>
+          </div>
+          <time id="system-clock" class="digital-clock" aria-label="Hora actual">--:--:--</time>
+        </div>
+        <h1>GESTOR DE TAREAS</h1>
+        <p class="app__intro">Consola de control y seguimiento de actividades</p>
+      </header>
+
+      <section class="task-panel" aria-labelledby="task-heading">
+        <h2 id="task-heading" class="visually-hidden">Agregar nueva tarea</h2>
+        <form id="task-form" class="task-form">
+          <label class="visually-hidden" for="task-input">Nueva tarea</label>
+          <input
+            id="task-input"
+            name="task"
+            type="text"
+            maxlength="160"
+            placeholder="¿Qué tarea tienes pendiente?"
+            autocomplete="off"
+            required
+          />
+          <button class="button button--primary" type="submit">
+            <svg class="button__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            <span>Agregar</span>
+          </button>
+        </form>
+
+        <p id="feedback" class="feedback" role="alert" aria-live="polite"></p>
+
+        <div class="task-summary">
+          <div class="task-summary__header">
+            <h2>Mis tareas</h2>
+            <span id="task-count" class="task-count">0 tareas</span>
+          </div>
+          <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Progreso de tareas">
+            <div id="progress-fill" class="progress-bar__fill"></div>
+          </div>
+        </div>
+
+        <ul id="task-list" class="task-list" aria-label="Tareas registradas"></ul>
+
+        <div id="empty-state" class="empty-state">
+          <div class="empty-state__icon" aria-hidden="true">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 11l3 3L22 4"/>
+              <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+            </svg>
+          </div>
+          <p class="empty-state__title">No tienes tareas registradas</p>
+          <p class="empty-state__hint">Escribe una tarea arriba y haz clic en Agregar para comenzar.</p>
+        </div>
+      </section>
+
+      <footer class="app__footer">
+        Laboratorio POE · Almacenamiento local en el navegador
+      </footer>
+    </main>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
+
