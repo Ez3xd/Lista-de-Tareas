@@ -1,4 +1,5 @@
 import { Tarea } from "../models/Tarea";
+import type { Prioridad } from "../models/Tarea";
 
 const STORAGE_KEY = "proyecto-tareas";
 
@@ -8,6 +9,8 @@ interface TareaStorage {
   titulo: string;
   creadaEn: number;
   completada: boolean;
+  prioridad: Prioridad;
+  fechaLimite: string;
 }
 
 export class StorageService {
@@ -36,7 +39,17 @@ export class StorageService {
             typeof item.completada === "boolean"
           );
         })
-        .map((item) => new Tarea(item.id, item.titulo, item.creadaEn ?? Date.now(), item.completada));
+        .map(
+          (item) =>
+            new Tarea(
+              item.id,
+              item.titulo,
+              item.creadaEn ?? Date.now(),
+              item.completada,
+              item.prioridad ?? "media",
+              item.fechaLimite ?? "",
+            ),
+        );
     } catch {
       throw new Error("No se pudieron leer las tareas guardadas.");
     }
@@ -51,4 +64,3 @@ export class StorageService {
     }
   }
 }
-
