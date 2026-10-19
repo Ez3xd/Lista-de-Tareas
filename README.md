@@ -1,70 +1,83 @@
-# Gestor de Tareas - Laboratorio POE
+# Gestor de Tareas - Parcial 2 POE
 
-Proyecto práctico de Programación Orientada a Eventos (POE) para segundo año de carrera. Es una aplicación web para organizar pendientes con guardado automático y una interfaz en tema oscuro inspirada en el menú de la Xbox clásica con reloj en tiempo real.
+Proyecto práctico de Programación Orientada a Eventos (POE) para segundo año de carrera. Actualización del Laboratorio #2 con nuevas funcionalidades. Es una aplicación web para organizar tareas con prioridades, fechas límite, búsqueda, filtros y guardado automático en el navegador.
 
 ---
 
 ## 1. Qué es
 
-Es un organizador de tareas personal que corre directamente en el navegador. Te permite registrar actividades pendientes, marcarlas conforme las vas terminando y llevar un control visual de tu progreso sin necesidad de registrarte ni conectarte a un servidor.
+Es un organizador de tareas personal que corre directamente en el navegador. Permite registrar actividades, asignarles prioridad (alta/media/baja) y fecha límite, editarlas, marcarlas como completadas y eliminarlas con confirmación. No se necesita registro ni servidor, todo se guarda en `localStorage`.
 
 ---
 
-## 2. Cómo se hizo
+## 2. Funcionalidades nuevas (Parcial 2)
 
-Se desarrolló usando **TypeScript**, **HTML5** y **CSS puro**, empaquetado con **Vite**. No se usaron frameworks como React o Angular para enfocarse en la manipulación limpia del DOM y el manejo de eventos nativos.
+Comparado con el Laboratorio #2, se agregaron estas funcionalidades:
 
-El código está separado en capas para mantener orden (patrón MVC + Servicio):
-
-* **src/models/Tarea.ts (Modelo):** Define qué datos tiene una tarea (id, título, fecha de creación y si está completada).
-* **src/views/TareaView.ts (Vista):** Se encarga de dibujar las tareas en pantalla, manejar el reloj en tiempo real, actualizar la barra de progreso y capturar los eventos del usuario (clicks, submits y cambios en los checks).
-* **src/controllers/TareaController.ts (Controlador):** Es el intermediario. Recibe las acciones de la vista, ejecuta la lógica de agregar, tachar o borrar, y manda a guardar los cambios.
-* **src/services/StorageService.ts (Servicio):** Lee y escribe las tareas en `localStorage` usando JSON para que no se borren al cerrar la ventana.
-* **src/main.ts:** Archivo principal donde se instancian y conectan todas las partes.
-
----
-
-## 3. Cómo funciona
-
-1. **Agregar:** Escribes una tarea en el cuadro de texto y das clic en "Agregar" (o presionas Enter). Si el campo está vacío, te muestra una advertencia que se quita sola al empezar a escribir.
-2. **Completar:** Marcas la casilla a la izquierda de la tarea. El texto se tacha, el fondo cambia y la barra de porcentaje sube.
-3. **Eliminar:** Das clic en el botón con el icono del basurero en la tarea que quieras quitar.
-4. **Guardado automático:** Cualquier cambio se sincroniza al instante en el almacenamiento local del navegador (`localStorage`).
-5. **Reloj de cabecera:** Muestra la hora local con segundos exactos y se actualiza cada segundo mediante `setInterval`.
+| RF | Descripción | Estado |
+|---|---|---|
+| RF-01 | Fecha límite por tarea | ✅ |
+| RF-02 | Prioridad (alta / media / baja) | ✅ |
+| RF-03 | Editar tareas existentes | ✅ |
+| RF-04 | Eliminar con confirmación (modal) | ✅ |
+| RF-05 | Buscar por título en tiempo real | ✅ |
+| RF-06 | Filtrar por estado y prioridad | ✅ |
+| RF-07 | Ordenar por fecha o prioridad | ✅ |
+| RF-08 | Guardar en localStorage | ✅ |
+| RF-09 | Contador de tareas pendientes | ✅ |
+| Reto | Marcar tareas vencidas en rojo | ✅ |
 
 ---
 
-## 4. Cómo arrancarlo y verificarlo
+## 3. Cómo se hizo
+
+Desarrollado con **TypeScript**, **HTML5** y **CSS puro**, empaquetado con **Vite**. Sin frameworks. El código sigue el patrón MVC:
+
+* **`src/models/Tarea.ts` (Modelo):** Define los datos de una tarea: id, título, fecha de creación, estado completada, prioridad y fecha límite. Incluye el método `estaVencida()` para detectar tareas vencidas automáticamente.
+* **`src/views/TareaView.ts` (Vista):** Dibuja las tareas, maneja el formulario en modo agregar y en modo editar, muestra badges de prioridad, fechas, reloj en tiempo real, barra de progreso y el modal de confirmación para eliminar.
+* **`src/controllers/TareaController.ts` (Controlador):** Coordina las acciones del usuario, valida duplicados de título, aplica la búsqueda + filtros + ordenamiento combinados antes de renderizar.
+* **`src/services/StorageService.ts` (Servicio):** Lee y escribe en `localStorage` con validación de esquema para los campos nuevos.
+* **`src/main.ts`:** Punto de entrada, conecta todos los módulos.
+
+---
+
+## 4. Validaciones implementadas
+
+- Título no puede estar vacío
+- No se permiten tareas con el mismo nombre (duplicados)
+- Al editar, tampoco puede duplicar con otra tarea existente
+- Tareas vencidas se detectan comparando la fecha actual vs `fechaLimite`
+
+---
+
+## 5. Cómo arrancarlo
 
 ### Requisitos previos
 * Node.js instalado en la máquina.
 
 ### Pasos para ejecutar
-1. Abrir una terminal en la carpeta del proyecto (`Lista_de_Tareas`).
-2. Instalar las dependencias (solo necesario la primera vez):
+1. Abrir una terminal en la carpeta del proyecto.
+2. Instalar dependencias (solo la primera vez):
    ```bash
    npm install
    ```
-3. Iniciar el entorno de desarrollo:
+3. Iniciar modo desarrollo:
    ```bash
    npm run dev
    ```
-4. Abrir en el navegador la dirección que aparezca en la consola (normalmente `http://localhost:5173`).
+4. Abrir `http://localhost:5173` en el navegador.
 
-### Cómo comprobar que todo funciona bien
-* **Comprobación rápida en pantalla:**
-  1. Agrega una tarea como "Estudiar para examen" y confirma que aparezca en la lista.
-  2. Marca la casilla y revisa que la barra de progreso suba y el contador cambie.
-  3. Recarga la página (F5) y comprueba que la tarea siga ahí con su mismo estado.
-  4. Presiona el botón de eliminar y confirma que desaparezca.
+### Cómo comprobar que funciona
 
-* **Comprobación técnica en consola:**
-  * Para revisar que no haya errores de tipos en TypeScript:
-    ```bash
-    npm run check
-    ```
-  * Para generar los archivos finales optimizados de producción:
-    ```bash
-    npm run build
-    ```
+1. Agrega una tarea con prioridad Alta y una fecha límite pasada → debe aparecer en **rojo** como vencida.
+2. Edita esa tarea cambiando el título → el formulario carga los datos actuales y el botón cambia a "Actualizar".
+3. Intenta agregar otra tarea con el mismo nombre → debe mostrar mensaje de duplicado.
+4. Usa el buscador y los filtros al mismo tiempo → solo deben mostrarse las tareas que cumplan ambos criterios.
+5. Da clic en eliminar → debe aparecer el modal de confirmación antes de borrar.
+6. Recarga la página (F5) → las tareas deben seguir ahí con sus datos completos.
 
+### Comandos útiles
+```bash
+npm run check   # verifica tipos TypeScript
+npm run build   # genera archivos de producción en /dist
+```
